@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import ExtractBox from "../ExtractBox";
 import DetailsLink from "../DetailsLink";
+
+import { QuestionType } from "../../types/database";
 import { getPrevExtractions, saveExtractions } from "../../services/questions";
-import { Extractions } from "../../types/collections";
+import { Questions } from "../../types/collections";
 
 const Landing = () => {
-  const [extractions, setExtractions] = useState<Extractions[]>([]);
+  const [extractions, setExtractions] = useState<Questions[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,15 +26,27 @@ const Landing = () => {
     }
   }
 
-  async function saveQuestions(questions: string[]) {
-    try {
-      const { data, error } = await saveExtractions(questions);
-      if (error) throw error;
-      setExtractions([...data, ...extractions]);
-    } catch (error) {
-      console.log("Error saving questions:", error);
-    }
-  }
+  const saveQuestions = useCallback(
+    async (questions: string[]) => {
+      try {
+        let questionsArr: QuestionType[] = [];
+        // check if question already asked
+        questions.forEach((question) => {
+          const questionsFound = extractions.filter((extract) =>
+            extract.questions.filter((q) => q.question === question)
+          );
+          questionsArr.push({ question, count: questionsFound.length + 1 });
+        });
+
+        const { data, error } = await saveExtractions(questionsArr);
+        if (error) throw error;
+        setExtractions((prev) => [...data, ...prev]);
+      } catch (error) {
+        console.log("Error saving questions:", error);
+      }
+    },
+    [extractions]
+  );
 
   return (
     <div className="flex flex-col w-full md:max-w-2xl m-auto text-gray-700">

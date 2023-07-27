@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+// import { QuestionType } from "../../types/database";
 import { Questions } from "../../types/collections";
 import Card from "../Card";
 import formatTimestamp from "../../utils/formatTimestamp";
@@ -44,11 +45,18 @@ const Details = () => {
               </h4>
             </div>
             <div className="flex flex-col justify-start space-y-4">
-              {questionObj.questions.map((question, index) => (
-                <Card key={index}>
-                  <div className="p-4">{question}</div>
-                </Card>
-              ))}
+              {questionObj.questions.map((q, index) => {
+                const { question, count } = q;
+                return (
+                  <Card key={index}>
+                    <div className="p-4">
+                      {count > 1 ? "*" : ""}
+                      {question}
+                      {count > 1 ? ` (${count})` : ""}
+                    </div>
+                  </Card>
+                );
+              })}
             </div>
           </>
         )

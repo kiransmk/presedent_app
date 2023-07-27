@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useCallback } from "react";
+import React, { useState, useCallback, memo } from "react";
 
 type ExtractBoxProps = {
   questionsFound: Function;
@@ -19,7 +19,7 @@ const ExtractBox = ({ questionsFound }: ExtractBoxProps) => {
     }
   }, [searchText, questionsFound]);
 
-  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setSearchText(e.target.value);
   };
 
@@ -52,4 +52,4 @@ const ExtractBox = ({ questionsFound }: ExtractBoxProps) => {
   );
 };
 
-export default ExtractBox;
+export default memo(ExtractBox);
