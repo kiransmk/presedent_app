@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-// import { QuestionType } from "../../types/database";
 import { Questions } from "../../types/collections";
 import Card from "../Card";
 import formatTimestamp from "../../utils/formatTimestamp";
@@ -45,8 +44,7 @@ const Details = () => {
               </h4>
             </div>
             <div className="flex flex-col justify-start space-y-4">
-              {questionObj.questions.map((q, index) => {
-                const { question, count } = q;
+              {questionObj.questions.map(({ question, count }, index) => {
                 return (
                   <Card key={index}>
                     <div className="p-4">
