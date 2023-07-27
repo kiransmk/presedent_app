@@ -32,12 +32,16 @@ const Landing = () => {
         let questionsArr: QuestionType[] = [];
         // check if question already asked
         questions.forEach((question) => {
-          const questionsFound = extractions.filter((extract) =>
-            extract.questions.filter((q) => q.question === question)
-          );
-          questionsArr.push({ question, count: questionsFound.length + 1 });
+          let count = 0;
+          extractions.filter((extract) => {
+            const matchingQuestion = extract.questions.filter(
+              (q) => q.question === question
+            );
+            count += matchingQuestion.length;
+            console.log(matchingQuestion);
+          });
+          questionsArr.push({ question, count: count + 1 });
         });
-
         const { data, error } = await saveExtractions(questionsArr);
         if (error) throw error;
         setExtractions((prev) => [...data, ...prev]);
