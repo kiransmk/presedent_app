@@ -14,7 +14,9 @@ const ExtractBox = ({ questionsFound }: ExtractBoxProps) => {
       setSearchText("");
       // call parent to present questions
       if (matches) {
-        questionsFound(matches);
+        // get only unique questions
+        const uniqueQuestionSet = new Set(matches);
+        questionsFound(Array.from(uniqueQuestionSet));
       }
     }
   }, [searchText, questionsFound]);
