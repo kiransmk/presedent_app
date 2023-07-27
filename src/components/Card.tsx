@@ -1,10 +1,10 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 type CardPros = {
   children: ReactNode;
 };
 
-const Card: React.FC<CardPros> = ({ children }) => (
+const Card = ({ children }: CardPros) => (
   <div className="rounded outline outline-1 outline-gray-200">{children}</div>
 );
 

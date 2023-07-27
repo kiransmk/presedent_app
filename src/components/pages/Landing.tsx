@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import supabase from "../../config/supabase_client";
-import { Questions } from "../../types/collections";
+import { useState, useEffect } from "react";
 import ExtractBox from "../ExtractBox";
 import DetailsLink from "../DetailsLink";
+import { getPrevExtractions, saveExtractions } from "../../services/questions";
+import { Extractions } from "../../types/collections";
 
-const Landing: React.FC = () => {
-  const [questions, setQuestions] = useState<Questions[]>([]);
+const Landing = () => {
+  const [extractions, setExtractions] = useState<Extractions[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,9 +14,9 @@ const Landing: React.FC = () => {
 
   async function getQuestions() {
     try {
-      const { data, error } = await supabase.from("questions").select();
+      const { data, error } = await getPrevExtractions();
       if (error) throw error;
-      setQuestions(data || []);
+      setExtractions(data);
       setLoading(false);
     } catch (error) {
       console.log("Error fetching questions:", error);
@@ -26,9 +26,9 @@ const Landing: React.FC = () => {
 
   async function saveQuestions(questions: string[]) {
     try {
-      const { error } = await supabase.from("questions").insert({ questions });
+      const { data, error } = await saveExtractions(questions);
       if (error) throw error;
-      getQuestions();
+      setExtractions([...data, ...extractions]);
     } catch (error) {
       console.log("Error saving questions:", error);
     }
@@ -45,7 +45,7 @@ const Landing: React.FC = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            questions.map(({ id, inserted_at }) => (
+            extractions?.map(({ id, inserted_at }) => (
               <DetailsLink key={id} id={id} date={inserted_at} />
             ))
           )}

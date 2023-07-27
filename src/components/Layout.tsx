@@ -1,11 +1,11 @@
-import React, { Fragment, ReactNode } from "react";
+import { Fragment, ReactNode } from "react";
 import Header from "./Header";
 
 type LayoutPros = {
   children: ReactNode;
 };
 
-const Layout: React.FC<LayoutPros> = ({ children }) => {
+const Layout = ({ children }: LayoutPros) => {
   return (
     <Fragment>
       <Header />

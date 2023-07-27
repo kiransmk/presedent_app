@@ -1,30 +1,27 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import supabase from "../../config/supabase_client";
 import { Questions } from "../../types/collections";
 import Card from "../Card";
 import formatTimestamp from "../../utils/formatTimestamp";
+import { getExtraction } from "../../services/questions";
 
 const DATETIME_FORMAT = "MM/DD/YY - HH:mm";
 
-const Details: React.FC = () => {
+const Details = () => {
   const { id } = useParams();
   const [questionObj, setQuestionObj] = useState<Questions | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (id) {
-      getQuestions();
+      getQuestions(id);
     }
   }, [id]);
 
-  async function getQuestions() {
+  async function getQuestions(id: string) {
     try {
-      const { data, error } = await supabase
-        .from("questions")
-        .select()
-        .eq("id", id);
+      const { data, error } = await getExtraction(id);
       if (error) throw error;
       setQuestionObj(data[0] || null);
       setLoading(false);

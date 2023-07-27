@@ -8,7 +8,7 @@ type DetailsLinkProps = {
 };
 
 const DATETIME_FORMAT = "MM/DD/YY - HH:mm";
-const DetailsLink: React.FC<DetailsLinkProps> = ({ id, date }) => {
+const DetailsLink = ({ id, date }: DetailsLinkProps) => {
   return (
     <Card>
       <Link
