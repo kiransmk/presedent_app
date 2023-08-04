@@ -1,8 +1,3 @@
-export type QuestionType = {
-  question: string;
-  count: number;
-};
-
 export type Json =
   | string
   | number
@@ -58,17 +53,17 @@ export interface Database {
         Row: {
           id: number;
           inserted_at: string;
-          questions: QuestionType[];
+          questions: Json[];
         };
         Insert: {
           id?: number;
           inserted_at?: string;
-          questions: QuestionType[];
+          questions: Json[];
         };
         Update: {
           id?: number;
           inserted_at?: string;
-          questions?: QuestionType[];
+          questions?: Json[];
         };
         Relationships: [];
       };

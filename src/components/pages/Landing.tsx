@@ -2,8 +2,11 @@ import { useCallback, useState, useEffect } from "react";
 import ExtractBox from "../ExtractBox";
 import DetailsLink from "../DetailsLink";
 
-import { QuestionType } from "../../types/database";
-import { getPrevExtractions, saveExtractions } from "../../services/questions";
+import {
+  QuestionType,
+  getPrevExtractions,
+  saveExtractions,
+} from "../../services/questions";
 import { Questions } from "../../types/collections";
 
 const Landing = () => {
@@ -18,7 +21,7 @@ const Landing = () => {
     try {
       const { data, error } = await getPrevExtractions();
       if (error) throw error;
-      setExtractions(data);
+      setExtractions(data ?? []);
       setLoading(false);
     } catch (error) {
       console.log("Error fetching questions:", error);
@@ -29,20 +32,21 @@ const Landing = () => {
   const saveQuestions = useCallback(
     async (questions: string[]) => {
       try {
-        let questionsArr: QuestionType[] = [];
         // check if question already asked
-        questions.forEach((question) => {
-          let count = 0;
-          extractions.filter((extract) => {
-            const matchingQuestion = extract.questions.filter(
-              (q) => q.question === question
-            );
-            count += matchingQuestion.length;
-            console.log(matchingQuestion);
-          });
-          questionsArr.push({ question, count: count + 1 });
-        });
-        const { data, error } = await saveExtractions(questionsArr);
+        const newExtractions: QuestionType[] = await Promise.all(
+          questions.map(async (question) => {
+            let count = extractions.reduce((acc, extract) => {
+              const matchingQuestion = extract.questions.filter((q) => {
+                const { question: que } = q as QuestionType;
+                return que === question;
+              });
+              return acc + matchingQuestion.length;
+            }, 0);
+            return { question, count: count + 1 };
+          })
+        );
+        const { data, error } = await saveExtractions(newExtractions);
+
         if (error) throw error;
         setExtractions((prev) => [...data, ...prev]);
       } catch (error) {

@@ -1,5 +1,9 @@
 import supabase from "../config/supabase_client";
-import { QuestionType } from "../types/database";
+
+export type QuestionType = {
+  question: string;
+  count: number;
+};
 
 export async function saveExtractions(questions: QuestionType[]) {
   return await supabase.from("questions").insert({ questions }).select();
