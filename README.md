@@ -27,7 +27,7 @@ Application is built with React + TypeScript + Vite + Supabase + TailwindCss
 
 ```shell
 npm install
-cd precedent_app
+cd question_extractor_app
 ```
 
 - Create .env.local and save reference ID and Anon public key
